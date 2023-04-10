@@ -33,22 +33,27 @@ int main() {
 	//tree->remove("Black-footed Ferrets");
 	//tree->printTreePre();
 
+	//cout << "Removing a node with one kid" << endl;
+	//tree->remove("Snow Leopard");
+	//tree->printTreePre();
+
+	cout << "Removing a node with two kids" << endl;
+	tree->remove("Blue Whale");
+	tree->printTreePre();
 
 
 
 
 
 
+	//Interface interface("PracticeSpecies.txt", false);
+	//interface.Menu();
 
+	//interface.tree->clearTree();
 
-//	Interface interface("PracticeSpecies.txt", false);
-//	interface.Menu();
-
-//	interface.tree->clearTree();
-
-//	Interface interface("EndangeredSpecies.txt", false);
-//	interface.Menu();
-//	tree->clearTree();
+	//Interface interface("EndangeredSpecies.txt", false);
+	//interface.Menu();
+	//tree->clearTree();
 
 	return 0;
 }

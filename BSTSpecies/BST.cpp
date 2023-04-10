@@ -245,10 +245,65 @@ BSTNode *BST::removeNoKids(BSTNode *tmp) {
 }
 
 BSTNode *BST::removeOneKid(BSTNode *tmp,bool leftFlag) {
-// you write
+	BSTNode *tmpParent = tmp->parent;
+	int propHeight;
+	if(tmpParent->left != NULL){
+		if(tmpParent->left->animal->name == tmp->animal->name){
+			if(leftFlag){
+				tmpParent->left = tmp->left;
+				tmp->left->parent = tmpParent;
+			}
+			else{
+				tmpParent->left = tmp->right;
+				tmp->right->parent = tmpParent;
+			}
+		}
+		else{
+			if(leftFlag){
+				tmpParent->right = tmp->left;
+				tmp->left->parent = tmpParent;
+			}
+			else{
+				tmpParent->right = tmp->right;
+				tmp->right->parent = tmpParent;
+			}
+		}
+	}
+	else{
+		if(leftFlag){
+			tmpParent->right = tmp->left;
+			tmp->left->parent = tmpParent;
+		}
+		else{
+			tmpParent->right = tmp->right;
+			tmp->right->parent = tmpParent;
+		}
+	}
+
+	//check heights
+	 //find prop height
+	 propHeight = propHeightFinder(tmpParent);
+	 while(tmpParent != NULL){
+		 if(propHeight == tmpParent->height){
+			 break;
+		 }
+		 tmpParent->height = tmpParent->height - 1;
+		 tmpParent = tmpParent->parent;
+		 if(tmpParent != NULL){
+			 propHeight = propHeightFinder(tmpParent);
+			 if(propHeight == tmpParent->height){
+				 break;
+			 }
+		 }
+
+	 }
+	 return tmp;
+
 }
+
 BSTNode *BST::remove(string s) {
 	BSTNode *temp = find(s);
+	int propHeight;
 	if(temp != NULL){
 		//if BSTNode is a leaf node
 		if(temp->height == 1){
@@ -257,12 +312,63 @@ BSTNode *BST::remove(string s) {
 			return temp;
 		}
 		//if two childs
-		else if(temp->left !=NULL && temp->right != NULL){
+		else if(temp->left != NULL && temp->right != NULL){
+			BSTNode *leftMost = temp->right;
+			while(leftMost->left != NULL){
+				leftMost = leftMost->left;
+			}
+			if(leftMost->right != NULL){
+				leftMost->parent->right = leftMost->right;
+				leftMost->right->parent = leftMost->parent;
+			}
+			else{
+				leftMost->parent->left = NULL;
 
+			}
+			//start replacing
+			//BSTNode *replacedParent = leftMost->parent;
+			leftMost->parent = temp->parent;
+			if(temp->parent->left != NULL){
+				if(temp->parent->left->animal->name == temp->animal->name){
+					temp->parent->left = leftMost;
+				}
+				else{
+					temp->parent->right = leftMost;
+				}
+			}
+			else{
+				temp->parent->right = leftMost;
+			}
+			temp->parent = NULL;
+			leftMost->left = temp->left;
+			temp->left = NULL;
+			leftMost->right = temp->right;
+			temp->right = NULL;
+			leftMost->height = temp->height;
+
+			propHeight = propHeightFinder(leftMost);
+			while(leftMost != NULL){
+				if(propHeight == leftMost->height){
+					break;
+				}
+				leftMost->height = leftMost->height - 1;
+				leftMost = leftMost->parent;
+				if(leftMost != NULL){
+					propHeight = propHeightFinder(leftMost);
+					if(propHeight == leftMost->height){
+						break;
+					}
+				}
+
+			}
+			cout<<"successfully removed a node with two kids"<<endl;
+			return temp;
 		}
 		//if one child
 		else{
-
+			temp = removeOneKid(temp, temp->left != NULL);
+			cout << "successfully removed a node with one kid" << endl;
+			return temp;
 		}
 	}
 	else{
