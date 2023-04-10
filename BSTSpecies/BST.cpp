@@ -151,8 +151,39 @@ void BST::setHeight(BSTNode *tmp) {
 	 }
 }
 
+int BST::propHeightFinder(BSTNode *tmpParent){
+	int propHeight;
+	if(tmpParent->left != NULL && tmpParent->right != NULL){
+		if(tmpParent->left->height > tmpParent->right->height){
+			propHeight = tmpParent->left->height + 1;
+			return propHeight;
+		}
+		else if(tmpParent->left->height < tmpParent->right->height ){
+			propHeight = tmpParent->right->height + 1;
+			return propHeight;
+		}
+		else{
+			propHeight = tmpParent->right->height + 1;
+			return propHeight;
+		}
+	}
+	else{
+		if(tmpParent->left == NULL){ //we know to check the right
+			propHeight = tmpParent->right->height + 1;
+			return propHeight;
+		}
+		//we know to check the left
+		else{
+			propHeight = tmpParent->left->height + 1;
+			return propHeight;
+		}
+	}
+}
+
+
 BSTNode *BST::removeNoKids(BSTNode *tmp) {
 	 BSTNode *tmpParent = tmp->parent;
+	 int propHeight;
 
 	 if(tmpParent->left != NULL){
 		 if(tmpParent->left->animal->name == tmp->animal->name){
@@ -167,12 +198,49 @@ BSTNode *BST::removeNoKids(BSTNode *tmp) {
 		 tmpParent->right = NULL;
 	 }
 
+	 /*Check heights*/
+	 //check case where we know the parent is now a leaf node
+	 if(tmpParent->right == NULL && tmpParent->left == NULL){
+		 tmpParent->height = 1;
+		 tmpParent = tmpParent->parent;
 
+		 //find propHeight
+		 propHeight = propHeightFinder(tmpParent);
 
+		 while(tmpParent != NULL){
+			 if(propHeight == tmpParent->height){
+				 break;
+			 }
+			 tmpParent->height = tmpParent->height - 1;
+			 tmpParent = tmpParent->parent;
+			 if(tmpParent != NULL){
+				 propHeight = propHeightFinder(tmpParent);
+				 if(propHeight == tmpParent->height){
+					 break;
+				 }
+			 }
+		 }
 
+	 }
+	 //if its not a leaf node, we can begin looping
+	 else {
 
-
-
+		 //find prop height
+		 propHeight = propHeightFinder(tmpParent);
+		 while(tmpParent != NULL){
+		 if(propHeight == tmpParent->height){
+			 break;
+		 }
+		 tmpParent->height = tmpParent->height - 1;
+		 tmpParent = tmpParent->parent;
+		 if(tmpParent != NULL){
+			 propHeight = propHeightFinder(tmpParent);
+			 if(propHeight == tmpParent->height){
+				 break;
+			 }
+		 }
+	 }
+	 }
 	 return tmp;
 }
 
@@ -187,6 +255,14 @@ BSTNode *BST::remove(string s) {
 			temp = removeNoKids(temp);
 			cout << "successfully removed a node with no kids" << endl;
 			return temp;
+		}
+		//if two childs
+		else if(temp->left !=NULL && temp->right != NULL){
+
+		}
+		//if one child
+		else{
+
 		}
 	}
 	else{

@@ -31,6 +31,7 @@ public:
 	BSTNode *removeOneKid(BSTNode *tmp, bool leftFlag);
 	BSTNode *remove(string s);
 	void setHeight(BSTNode *n);
+	int propHeightFinder(BSTNode *n);
 };
 
 

@@ -29,9 +29,9 @@ int main() {
 	cout << endl << endl;
 	*/
 
-	 cout << "Removing a node with no kids" << endl;
-	 tree->remove("Galapagos Penguins");
-	 tree->printTreePre();
+	//cout << "Removing a node with no kids" << endl;
+	//tree->remove("Black-footed Ferrets");
+	//tree->printTreePre();
 
 
 
